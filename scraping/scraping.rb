@@ -7,7 +7,7 @@ class Student
   ALL_STUDENTS = []
 
   attr_accessor :link, :image_link, :tagline, :profile_image, :name, :twitter, :linkedin,
-                :github, :quote, :bio, :education, :links, :treehouse,
+                :github, :quote, :bio, :education, :work, :treehouse,
                 :codeschool, :coderwall, :blogs, :personal_projects, :fav_cities,
                 :fav_website, :fav_comic, :fav_radio, :flatiron_projects
 
@@ -26,31 +26,72 @@ class Student
     begin
       student_page = Nokogiri::HTML(open(full_link))
       # scrape individual elements
-      if student_page.css('h4.ib_main_header').text != ''
-        self.name = student_page.css('h4.ib_main_header').text
-      else
-        self.name = "No Name"
-      end
+
+      # if student_page.css('h4.ib_main_header').text != ''
+      #   self.name = student_page.css('h4.ib_main_header').text
+      # else
+      #   self.name = "No Name"
+      # end
       # puts self.name
+
       # self.profile_image = student_page.css('img.student_pic').attr('src').text
       # puts self.profile_image
+
       # self.twitter = student_page.css('.page-title .icon-twitter').first.parent.attr('href')
       # puts self.twitter
+
       # self.linkedin = student_page.css('.page-title .icon-linkedin-sign').first.parent.attr('href')
       # puts self.linkedin
+
       # self.github = student_page.css('.page-title .icon-github').first.parent.attr('href')
       # puts self.github
+
       # self.quote = student_page.css('.textwidget h3').text
       # puts self.quote
+
       # self.bio = student_page.css('#scroll-about #ok-text-column-2 p').first.text
       # puts self.bio
-      self.education = student_page.css('#scroll-about #ok-text-column-3 p').first.text
-      puts self.education
-      # self.links =
-      # self.treehouse =
-      # self.codeschool =
-      # self.coderwall =
-      # self.blogs =
+
+      # self.education = student_page.css('#ok-text-column-3 ul').children.text.split("\n").collect do |ed_item|
+      #   ed_item.strip
+      # end
+      # self.education.delete_if { |item| item.empty? }
+      # if self.education.size > 0
+      #   self.education = self.education.join('; ')
+      # else
+      #   self.education = "No data."
+      # end
+      # puts self.education.inspect
+
+      # student_page.css('h3').each do |h3|
+      #   if h3.text.strip.downcase == "work"
+      #     self.work = h3.parent.parent.css('p').text.strip
+      #   end
+      # end
+      # puts self.work
+
+      # student_page.css('img').each do |icon|
+      #   if icon.attr('alt') == "Treehouse"
+      #     self.treehouse = icon.parent.attr('href')
+      #   end
+      # end
+      # puts self.treehouse
+
+      # student_page.css('img').each do |icon|
+      #   if icon.attr('alt') == "Code School"
+      #     self.codeschool = icon.parent.attr('href')
+      #   end
+      # end
+      # puts self.codeschool
+
+      # student_page.css('img').each do |icon|
+      #   if icon.attr('alt') == "Coder Wall"
+      #     self.coderwall = icon.parent.attr('href')
+      #   end
+      # end
+      # puts self.coderwall
+
+        self.blogs =
       # self.personal_projects =
       # self.fav_cities =
       # self.fav_website =
