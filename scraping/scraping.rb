@@ -8,8 +8,8 @@ class Student
 
   attr_accessor :link, :image_link, :tagline, :profile_image, :name, :twitter, :linkedin,
                 :github, :quote, :bio, :education, :work, :treehouse,
-                :codeschool, :coderwall, :blogs, :personal_projects, :fav_cities,
-                :fav_website, :fav_comic, :fav_radio, :flatiron_projects
+                :codeschool, :coderwall, :blogs, :fav_cities,
+                :favorites, :full_link, :student_page
 
   @@index_link = "http://students.flatironschool.com/"
 
@@ -17,40 +17,63 @@ class Student
     @link = link
     @tagline = tagline
     @index_image = image_link
+    @full_link = @@index_link + self.link
     ALL_STUDENTS << self
     self.scrape
   end
 
+  def scrape_name
+    if @student_page.css('h4.ib_main_header').text != ''
+      self.name = @student_page.css('h4.ib_main_header').text
+    else
+      self.name = "No Name"
+    end
+    puts self.name
+  end
+
+  def scrape_profile_image
+    self.profile_image = @student_page.css('img.student_pic').attr('src').text
+    puts self.profile_image
+  end
+
+  def scrape_twitter
+    self.twitter = @student_page.css('.page-title .icon-twitter').first.parent.attr('href')
+    puts self.twitter
+  end
+
+  def scrape_linkedin
+    self.linkedin = @student_page.css('.page-title .icon-linkedin-sign').first.parent.attr('href')
+    puts self.linkedin
+  end
+
+  def scrape_github
+    self.github = @student_page.css('.page-title .icon-github').first.parent.attr('href')
+    puts self.github
+  end
+
+  def scrape_quote
+    self.quote = @student_page.css('.textwidget h3').text
+    puts self.quote
+  end
+
+  def scrape_bio
+    self.bio = @student_page.css('#scroll-about #ok-text-column-2 p').first.text
+    puts self.bio
+  end
+
   def scrape
-    full_link = @@index_link + self.link
     begin
-      student_page = Nokogiri::HTML(open(full_link))
+      @student_page = Nokogiri::HTML(open(@full_link))
+
       # scrape individual elements
 
-      # if student_page.css('h4.ib_main_header').text != ''
-      #   self.name = student_page.css('h4.ib_main_header').text
-      # else
-      #   self.name = "No Name"
-      # end
-      # puts self.name
-
-      # self.profile_image = student_page.css('img.student_pic').attr('src').text
-      # puts self.profile_image
-
-      # self.twitter = student_page.css('.page-title .icon-twitter').first.parent.attr('href')
-      # puts self.twitter
-
-      # self.linkedin = student_page.css('.page-title .icon-linkedin-sign').first.parent.attr('href')
-      # puts self.linkedin
-
-      # self.github = student_page.css('.page-title .icon-github').first.parent.attr('href')
-      # puts self.github
-
-      # self.quote = student_page.css('.textwidget h3').text
-      # puts self.quote
-
-      # self.bio = student_page.css('#scroll-about #ok-text-column-2 p').first.text
-      # puts self.bio
+      self.scrape_name
+      self.scrape_profile_image
+      self.scrape_twitter
+      self.scrape_linkedin
+      self.scrape_github
+      self.scrape_quote
+      self.scrape_bio
 
       # self.education = student_page.css('#ok-text-column-3 ul').children.text.split("\n").collect do |ed_item|
       #   ed_item.strip
@@ -91,13 +114,30 @@ class Student
       # end
       # puts self.coderwall
 
-        self.blogs =
-      # self.personal_projects =
-      # self.fav_cities =
-      # self.fav_website =
-      # self.fav_comic =
-      # self.fav_radio =
-      # self.flatiron_projects =
+      # student_page.css('h3').each do |h3|
+      #   if h3.text.strip.downcase == "blogs"
+      #     self.blogs = h3.parent.parent.css('a').map do |link|
+      #       "#{link.text} - #{link.attr('href')}"
+      #     end.join("\n")
+      #   end
+      # end
+      # puts self.blogs
+
+      # student_page.css('h3').each do |h3|
+      #   if h3.text.strip.downcase == "favorite cities"
+      #     self.fav_cities = h3.parent.parent.css('a').to_a.join('; ')
+      #   end
+      # end
+      # puts self.fav_cities
+
+        # student_page.css('h3').each do |h3|
+        #   if h3.text.strip.downcase == "favorites"
+        #     self.favorites = h3.parent.parent.css('p').map do |favorite|
+        #       favorite.text.gsub(/^\s*- /, "")
+        #     end
+        #   end
+        # end
+        # puts self.favorites
 
     rescue
       # if student_page isn't a valid link
