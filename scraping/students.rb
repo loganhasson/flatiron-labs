@@ -7,7 +7,7 @@ class Student
 
   ALL_STUDENTS = []
 
-  attr_accessor :link, :image_link, :tagline, :profile_image, :name, :twitter, :linkedin,
+  attr_accessor :link, :index_image, :tagline, :profile_image, :name, :twitter, :linkedin,
                 :github, :quote, :bio, :education, :work, :treehouse,
                 :codeschool, :coderwall, :blogs, :fav_cities,
                 :favorites, :full_link, :student_page
@@ -93,8 +93,6 @@ class Student
     else
       self.education = "No data."
     end
-
-    puts self.education.inspect
   end
 
   def scrape_work
@@ -103,8 +101,6 @@ class Student
         self.work = h3.parent.parent.css('p').text.strip
       end
     end
-    
-    puts self.work
   end
 
   def scrape_treehouse
@@ -113,8 +109,6 @@ class Student
         self.treehouse = icon.parent.attr('href')
       end
     end
-    
-    puts self.treehouse
   end
 
   def scrape_codeschool
@@ -123,8 +117,6 @@ class Student
         self.codeschool = icon.parent.attr('href')
       end
     end
-    
-    puts self.codeschool
   end
 
   def scrape_coderwall
@@ -133,8 +125,6 @@ class Student
         self.coderwall = icon.parent.attr('href')
       end
     end
-    
-    puts self.coderwall
   end
 
   def scrape_blogs
@@ -145,8 +135,6 @@ class Student
         end.join("\n")
       end
     end
-    
-    puts self.blogs
   end
 
   def scrape_cities
@@ -155,16 +143,14 @@ class Student
         self.fav_cities = h3.parent.parent.css('a').to_a.join('; ')
       end
     end
-  
-  puts self.fav_cities
   end
 
-  def scrape_favories
+  def scrape_favorites
     @student_page.css('h3').each do |h3|
       if h3.text.strip.downcase == "favorites"
         self.favorites = h3.parent.parent.css('p').map do |favorite|
-          favorite.text.gsub(/^\s*- /, "")
-        end
+          favorite.text.gsub(/^\s*- /, "").gsub("\"", "")
+        end.join("\n")
       end
     end
     
@@ -206,12 +192,6 @@ class Student
     begin
       flatiron_students = SQLite3::Database.open( "flatiron_students.db" )
 
-      puts "Executing statement"
-       #  favorite_cities TEXT,
-       #  favorites TEXT,
-       #  tagline TEXT,
-       #  image_link TEXT,
-       #  page_link TEXT)
       flatiron_students.execute "INSERT INTO students (name,
         profile_image,
         twitter,
@@ -225,7 +205,11 @@ class Student
         codeschool,
         coderwall,
         blogs,
-        favorite_cities)
+        favorite_cities,
+        favorites,
+        tagline,
+        image_link,
+        page_link)
         VALUES (\"#{self.name}\",
                 \"#{self.profile_image}\",
                 \"#{self.twitter}\",
@@ -239,13 +223,15 @@ class Student
                 \"#{self.codeschool}\",
                 \"#{self.coderwall}\",
                 \"#{self.blogs}\",
-                \"#{self.fav_cities}\")"
-        # \"#{self.favorites}\",
-        # \"#{self.tagline}\",
-        # \"#{self.image_link}\",
-        # \"#{self.link}\")"
+                \"#{self.fav_cities}\",
+                \"#{self.favorites}\",
+                \"#{self.tagline}\",
+                \"#{self.index_image}\",
+                \"#{self.link}\")"
+
     ensure
       flatiron_students.close if flatiron_students
+    
     end
   end
 
