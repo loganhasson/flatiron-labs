@@ -199,12 +199,7 @@ class Student
       flatiron_students = SQLite3::Database.open( "flatiron_students.db" )
 
       puts "Executing statement"
-      flatiron_students.execute "INSERT INTO students (name, profile_image, twitter,
-        linkedin, github, quote, bio, education, work, treehouse, codeschool, coderwall, blogs,
-        favorite_cities, favorites, tagline, image_link, page_link) VALUES (\"#{self.name}\", \"#{self.profile_image}\",
-        \"#{self.twitter}\", \"#{self.linkedin}\", \"#{self.github}\", \"#{self.quote}\", \"#{self.bio}\", \"#{self.education}\", \"#{self.work}\",
-        \"#{self.treehouse}\", \"#{self.codeschool}\", \"#{self.coderwall}\", \"#{self.blogs}\", \"#{self.fav_cities}\", \"#{self.favorites}\",
-        \"#{self.tagline}\", \"#{self.image_link}\", \"#{self.link}\")"
+      flatiron_students.execute "INSERT INTO students (name) VALUES (\"#{self.name}\")"
     ensure
       flatiron_students.close if flatiron_students
     end
