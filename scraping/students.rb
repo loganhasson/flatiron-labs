@@ -56,37 +56,30 @@ class Student
     else
       self.name = "No Name"
     end
-    puts self.name
   end
 
   def scrape_profile_image
     self.profile_image = @student_page.css('img.student_pic').attr('src').text
-    puts self.profile_image
   end
 
   def scrape_twitter
     self.twitter = @student_page.css('.page-title .icon-twitter').first.parent.attr('href')
-    puts self.twitter
   end
 
   def scrape_linkedin
     self.linkedin = @student_page.css('.page-title .icon-linkedin-sign').first.parent.attr('href')
-    puts self.linkedin
   end
 
   def scrape_github
     self.github = @student_page.css('.page-title .icon-github').first.parent.attr('href')
-    puts self.github
   end
 
   def scrape_quote
     self.quote = @student_page.css('.textwidget h3').text.gsub("\"", "")
-    puts self.quote
   end
 
   def scrape_bio
-    self.bio = @student_page.css('#scroll-about #ok-text-column-2 p').first.text
-    puts self.bio
+    self.bio = @student_page.css('#scroll-about #ok-text-column-2 p').first.text.strip
   end
 
   def scrape_education
@@ -214,10 +207,6 @@ class Student
       flatiron_students = SQLite3::Database.open( "flatiron_students.db" )
 
       puts "Executing statement"
-       #  treehouse TEXT,
-       #  codeschool TEXT,
-       #  coderwall TEXT,
-       #  blogs TEXT,
        #  favorite_cities TEXT,
        #  favorites TEXT,
        #  tagline TEXT,
@@ -231,7 +220,12 @@ class Student
         quote,
         bio,
         education,
-        work)
+        work,
+        treehouse,
+        codeschool,
+        coderwall,
+        blogs,
+        favorite_cities)
         VALUES (\"#{self.name}\",
                 \"#{self.profile_image}\",
                 \"#{self.twitter}\",
@@ -240,12 +234,12 @@ class Student
                 \"#{self.quote}\",
                 \"#{self.bio}\",
                 \"#{self.education}\",
-                \"#{self.work}\")"
-        # \"#{self.treehouse}\",
-        # \"#{self.codeschool}\",
-        # \"#{self.coderwall}\",
-        # \"#{self.blogs}\",
-        # \"#{self.fav_cities}\",
+                \"#{self.work}\",
+                \"#{self.treehouse}\",
+                \"#{self.codeschool}\",
+                \"#{self.coderwall}\",
+                \"#{self.blogs}\",
+                \"#{self.fav_cities}\")"
         # \"#{self.favorites}\",
         # \"#{self.tagline}\",
         # \"#{self.image_link}\",
