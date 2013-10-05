@@ -61,8 +61,99 @@ class Student
     puts self.bio
   end
 
+  def scrape_education
+    self.education = @student_page.css('#ok-text-column-3 ul').children.text.split("\n").collect do |ed_item|
+      ed_item.strip
+    end
+
+    self.education.delete_if { |item| item.empty? }
+    if self.education.size > 0
+      self.education = self.education.join('; ')
+    else
+      self.education = "No data."
+    end
+
+    puts self.education.inspect
+  end
+
+  def scrape_work
+    @student_page.css('h3').each do |h3|
+      if h3.text.strip.downcase == "work"
+        self.work = h3.parent.parent.css('p').text.strip
+      end
+    end
+    
+    puts self.work
+  end
+
+  def scrape_treehouse
+    @student_page.css('img').each do |icon|
+      if icon.attr('alt') == "Treehouse"
+        self.treehouse = icon.parent.attr('href')
+      end
+    end
+    
+    puts self.treehouse
+  end
+
+  def scrape_codeschool
+    @student_page.css('img').each do |icon|
+      if icon.attr('alt') == "Code School"
+        self.codeschool = icon.parent.attr('href')
+      end
+    end
+    
+    puts self.codeschool
+  end
+
+  def scrape_coderwall
+    @student_page.css('img').each do |icon|
+      if icon.attr('alt') == "Coder Wall"
+        self.coderwall = icon.parent.attr('href')
+      end
+    end
+    
+    puts self.coderwall
+  end
+
+  def scrape_blogs
+    @student_page.css('h3').each do |h3|
+      if h3.text.strip.downcase == "blogs"
+        self.blogs = h3.parent.parent.css('a').map do |link|
+          "#{link.text} - #{link.attr('href')}"
+        end.join("\n")
+      end
+    end
+    
+    puts self.blogs
+  end
+
+  def scrape_cities
+    @student_page.css('h3').each do |h3|
+      if h3.text.strip.downcase == "favorite cities"
+        self.fav_cities = h3.parent.parent.css('a').to_a.join('; ')
+      end
+    end
+  
+  puts self.fav_cities
+  end
+
+  def scrape_favories
+    @student_page.css('h3').each do |h3|
+      if h3.text.strip.downcase == "favorites"
+        self.favorites = h3.parent.parent.css('p').map do |favorite|
+          favorite.text.gsub(/^\s*- /, "")
+        end
+      end
+    end
+    
+    puts self.favorites
+  end
+
   def scrape
+
     begin
+
       @student_page = Nokogiri::HTML(open(@full_link))
 
       # scrape individual elements
@@ -74,76 +165,22 @@ class Student
       self.scrape_github
       self.scrape_quote
       self.scrape_bio
-
-      # self.education = student_page.css('#ok-text-column-3 ul').children.text.split("\n").collect do |ed_item|
-      #   ed_item.strip
-      # end
-      # self.education.delete_if { |item| item.empty? }
-      # if self.education.size > 0
-      #   self.education = self.education.join('; ')
-      # else
-      #   self.education = "No data."
-      # end
-      # puts self.education.inspect
-
-      # student_page.css('h3').each do |h3|
-      #   if h3.text.strip.downcase == "work"
-      #     self.work = h3.parent.parent.css('p').text.strip
-      #   end
-      # end
-      # puts self.work
-
-      # student_page.css('img').each do |icon|
-      #   if icon.attr('alt') == "Treehouse"
-      #     self.treehouse = icon.parent.attr('href')
-      #   end
-      # end
-      # puts self.treehouse
-
-      # student_page.css('img').each do |icon|
-      #   if icon.attr('alt') == "Code School"
-      #     self.codeschool = icon.parent.attr('href')
-      #   end
-      # end
-      # puts self.codeschool
-
-      # student_page.css('img').each do |icon|
-      #   if icon.attr('alt') == "Coder Wall"
-      #     self.coderwall = icon.parent.attr('href')
-      #   end
-      # end
-      # puts self.coderwall
-
-      # student_page.css('h3').each do |h3|
-      #   if h3.text.strip.downcase == "blogs"
-      #     self.blogs = h3.parent.parent.css('a').map do |link|
-      #       "#{link.text} - #{link.attr('href')}"
-      #     end.join("\n")
-      #   end
-      # end
-      # puts self.blogs
-
-      # student_page.css('h3').each do |h3|
-      #   if h3.text.strip.downcase == "favorite cities"
-      #     self.fav_cities = h3.parent.parent.css('a').to_a.join('; ')
-      #   end
-      # end
-      # puts self.fav_cities
-
-        # student_page.css('h3').each do |h3|
-        #   if h3.text.strip.downcase == "favorites"
-        #     self.favorites = h3.parent.parent.css('p').map do |favorite|
-        #       favorite.text.gsub(/^\s*- /, "")
-        #     end
-        #   end
-        # end
-        # puts self.favorites
+      self.scrape_education
+      self.scrape_work
+      self.scrape_treehouse
+      self.scrape_codeschool
+      self.scrape_coderwall
+      self.scrape_blogs
+      self.scrape_cities
+      self.scrape_favorites
 
     rescue
-      # if student_page isn't a valid link
+      # if student_page isn't a valid link   
       false
+
     end
   end
+  
 end
 
 # scrape students index page
