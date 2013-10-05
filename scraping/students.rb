@@ -14,6 +14,18 @@ class Student
 
   @@index_link = "http://students.flatironschool.com/"
 
+  def self.initiate
+    begin
+      flatiron_students = SQLite3::Database.new( "flatiron_students.db" )
+      flatiron_students.execute "CREATE TABLE IF NOT EXISTS students(id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT, profile_image TEXT, twitter TEXT, linkedin TEXT, github TEXT, quote TEXT, bio TEXT, education TEXT,
+        work TEXT, treehouse TEXT, codeschool TEXT, coderwall TEXT, blogs TEXT, favorite_cities TEXT,
+        favorites TEXT, tagline TEXT, image_link TEXT, page_link TEXT)"
+    ensure
+      flatiron_students.close if flatiron_students
+    end
+  end
+
   def initialize(link, image_link, tagline)
     @link = link
     @tagline = tagline
@@ -183,7 +195,18 @@ class Student
   end
 
   def save
+    begin
+      flatiron_students = SQLite3::Database.open( "flatiron_students.db" )
 
+      flatiron_students.execute "INSERT INTO students (name, profile_image, twitter,
+        linkedin, github, quote, bio, education, work, treehouse, codeschool, coderwall, blogs,
+        favorite_cities, favorites, tagline, image_link, page_link) VALUES (#{self.name}, #{self.profile_image},
+        #{self.twitter}, #{self.linkedin}, #{self.github}, #{self.quote}, #{self.bio}, #{self.education}, #{self.work},
+        #{self.treehouse}, #{self.codeschool}, #{self.coderwall}, #{self.blogs}, #{self.fav_cities}, #{self.favorites},
+        #{self.tagline}, #{self.image_link}, #{self.link})"
+    ensure
+      flatiron_students.close if flatiron_students
+    end
   end
 
 end

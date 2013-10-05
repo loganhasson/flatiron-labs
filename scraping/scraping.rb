@@ -5,12 +5,8 @@ require 'sqlite3'
 require_relative './students.rb'
 
 # create database
-begin
-  flatiron_students = SQLite3::Database.new( "flatiron_students.db" )
-  flatiron_students.execute "CREATE TABLE IF NOT EXISTS students(id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT, profile_image TEXT, twitter TEXT, linkedin TEXT, github TEXT, quote TEXT, bio TEXT, education TEXT,
-    work TEXT, treehouse TEXT, codeschool TEXT, coderwall TEXT, blogs TEXT, favorite_cities TEXT,
-    favorites TEXT, tagline TEXT, image_link TEXT, page_link TEXT)"
+
+  Student.initiate
 
   # scrape students index page
   students_index = Nokogiri::HTML(open("http://students.flatironschool.com"))
@@ -39,8 +35,3 @@ begin
     student = Student.new(s_link, student_images[i], student_taglines[i])
     student.save
   end
-
-ensure
-  flatiron_students.close if flatiron_students
-
-end
