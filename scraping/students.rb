@@ -18,9 +18,24 @@ class Student
     begin
       flatiron_students = SQLite3::Database.new( "flatiron_students.db" )
       flatiron_students.execute "CREATE TABLE IF NOT EXISTS students(id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT, profile_image TEXT, twitter TEXT, linkedin TEXT, github TEXT, quote TEXT, bio TEXT, education TEXT,
-        work TEXT, treehouse TEXT, codeschool TEXT, coderwall TEXT, blogs TEXT, favorite_cities TEXT,
-        favorites TEXT, tagline TEXT, image_link TEXT, page_link TEXT)"
+        name TEXT,
+        profile_image TEXT,
+        twitter TEXT,
+        linkedin TEXT,
+        github TEXT,
+        quote TEXT,
+        bio TEXT,
+        education TEXT,
+        work TEXT,
+        treehouse TEXT,
+        codeschool TEXT,
+        coderwall TEXT,
+        blogs TEXT,
+        favorite_cities TEXT,
+        favorites TEXT,
+        tagline TEXT,
+        image_link TEXT,
+        page_link TEXT)"
     ensure
       flatiron_students.close if flatiron_students
     end
@@ -65,7 +80,7 @@ class Student
   end
 
   def scrape_quote
-    self.quote = @student_page.css('.textwidget h3').text
+    self.quote = @student_page.css('.textwidget h3').text.gsub("\"", "")
     puts self.quote
   end
 
@@ -199,7 +214,42 @@ class Student
       flatiron_students = SQLite3::Database.open( "flatiron_students.db" )
 
       puts "Executing statement"
-      flatiron_students.execute "INSERT INTO students (name) VALUES (\"#{self.name}\")"
+       #  treehouse TEXT,
+       #  codeschool TEXT,
+       #  coderwall TEXT,
+       #  blogs TEXT,
+       #  favorite_cities TEXT,
+       #  favorites TEXT,
+       #  tagline TEXT,
+       #  image_link TEXT,
+       #  page_link TEXT)
+      flatiron_students.execute "INSERT INTO students (name,
+        profile_image,
+        twitter,
+        linkedin,
+        github,
+        quote,
+        bio,
+        education,
+        work)
+        VALUES (\"#{self.name}\",
+                \"#{self.profile_image}\",
+                \"#{self.twitter}\",
+                \"#{self.linkedin}\",
+                \"#{self.github}\",
+                \"#{self.quote}\",
+                \"#{self.bio}\",
+                \"#{self.education}\",
+                \"#{self.work}\")"
+        # \"#{self.treehouse}\",
+        # \"#{self.codeschool}\",
+        # \"#{self.coderwall}\",
+        # \"#{self.blogs}\",
+        # \"#{self.fav_cities}\",
+        # \"#{self.favorites}\",
+        # \"#{self.tagline}\",
+        # \"#{self.image_link}\",
+        # \"#{self.link}\")"
     ensure
       flatiron_students.close if flatiron_students
     end
