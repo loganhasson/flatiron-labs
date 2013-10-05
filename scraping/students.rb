@@ -16,7 +16,11 @@ class Student
 
   def self.initiate
     begin
+
+      # create new database
       flatiron_students = SQLite3::Database.new( "flatiron_students.db" )
+
+      # create students table
       flatiron_students.execute "CREATE TABLE IF NOT EXISTS students(id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
         profile_image TEXT,
@@ -36,8 +40,12 @@ class Student
         tagline TEXT,
         image_link TEXT,
         page_link TEXT)"
+
     ensure
+
+      # close database
       flatiron_students.close if flatiron_students
+    
     end
   end
 
@@ -153,8 +161,6 @@ class Student
         end.join("\n")
       end
     end
-    
-    puts self.favorites
   end
 
   def scrape
@@ -182,6 +188,7 @@ class Student
       self.scrape_favorites
 
     rescue
+
       # if student_page isn't a valid link   
       false
 
@@ -190,8 +197,11 @@ class Student
 
   def save
     begin
+      
+      # open database
       flatiron_students = SQLite3::Database.open( "flatiron_students.db" )
-
+      
+      # insert data
       flatiron_students.execute "INSERT INTO students (name,
         profile_image,
         twitter,
@@ -230,6 +240,8 @@ class Student
                 \"#{self.link}\")"
 
     ensure
+
+      # close database
       flatiron_students.close if flatiron_students
     
     end

@@ -4,8 +4,7 @@ require 'pry'
 require 'sqlite3'
 require_relative './students.rb'
 
-# create database
-
+  # create database
   Student.initiate
 
   # scrape students index page
@@ -22,12 +21,8 @@ require_relative './students.rb'
   end
 
   # create array of student image links, assigning '#' if one doesn't exist
-  student_images = students_index.css('.home-blog-post a').collect do |student|
-    begin
-      student.css('img').attr('src').text
-    rescue
-      '#'
-    end
+  student_images = students_index.css('.home-blog-post').collect do |student|
+    student.css('img').attr('src').text
   end
 
   # create student instances
