@@ -1,6 +1,7 @@
 require 'nokogiri'
 require 'open-uri'
 require 'pry'
+require 'sqlite3'
 
 class Student
 
@@ -179,6 +180,10 @@ class Student
       false
 
     end
+  end
+
+  def save
+
   end
 
 end
